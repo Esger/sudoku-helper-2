@@ -1,0 +1,31 @@
+<template>
+
+    <!-- <progress class="thinkingProgress"
+              value.bind="thinkingProgress"
+              max="100"></progress> -->
+
+    <div click.delegate="showControls()"
+         mouseover.delegate="showControls()"
+         class="hamburger ${tucked ? '' : 'tucked'}">=</div>
+
+    <div class="controls ${tucked ? 'tucked' : ''}"
+         mousemove.delegate="cancelHide()">
+
+        <label class="label" for="setup">
+             <input type="checkbox" 
+                    name="setup" 
+                    id="setup" 
+                    checked.bind="setupMode" 
+                    change.delegate="toggleSetupMode()">Setup</label>
+
+        <button class="button"
+                click.delegate="resetGrid()"
+                touchstart.delegate="resetGrid()">Reset</button>
+
+        <button class="button"
+                click.delegate="solveIt()"
+                touchstart.delegate="solveIt()">Solve</button>
+
+    </div>
+
+</template>

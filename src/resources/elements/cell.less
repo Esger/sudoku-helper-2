@@ -1,0 +1,47 @@
+.cell {
+    margin: 0 @cellSpacing @cellSpacing 0;
+
+    &[class*='--unset'] {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+
+    &[class*='--isSet'] {
+        .tileDefinition;
+        .centerXYDefinition;
+        cursor: default;
+        font-size: 3vmin;
+        font-weight: bold;
+        border-radius: 5px;
+        background-color: @TileColorSet;
+    }
+}
+
+.cell[class*=cell2], .cell[class*=cell5] {
+    margin-right: @blockSpacing;
+}
+
+.cell[class*=row2], .cell[class*=row5] {
+    margin-bottom: @blockSpacing;
+}
+
+.candidate {
+    .tileDefinition;
+    .centerXYDefinition;
+    margin: 1px;
+
+    &.candidate--removed, &.valueSet {
+        background-color: @TileColorSet;
+        pointer-events: none;
+        cursor: default;
+    }
+
+    &.candidate--removed {
+        opacity: .5;
+    }
+
+    &.valueSet {
+        font-size: 3vmin;
+    }
+}

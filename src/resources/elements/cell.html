@@ -1,0 +1,21 @@
+<template class="cell
+                row${row}__cell${col}
+                ${value < 0 ? 'cell--unset' : 'cell--isSet'}">
+
+    <require from="resources/value-converters/the-number"></require>
+    <require from="resources/value-converters/candidate-removed"></require>
+
+    <template if.bind="value < 0">
+        <p repeat.for="candidate of candidates"
+           class="candidate
+                ${candidates[$index] | candidateRemoved & signal:'updateCandidates'}
+                candidate--${candidate | theNumber & signal:'updateCandidates'}"
+           click.delegate="selectCandidate(candidate)"
+           touchstart.delegate="selectCandidate(candidate)">${candidates[$index] | theNumber & signal:'updateCandidates' }</p>
+    </template>
+
+    <template else>
+        <p class="candidate valueSet">${value | theNumber}</p>
+    </template>
+
+</template>

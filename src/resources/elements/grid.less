@@ -1,0 +1,30 @@
+@TileColorUnset: whitesmoke;
+@TileColorSet: LightGoldenRodYellow;
+@cellSpacing: 4px;
+@blockSpacing: 10px;
+
+.tileDefinition {
+    cursor: pointer;
+    font-size: 2vmin;
+    line-height: 0;
+    color: darkslategray;
+    text-shadow: 0 1px 1px #ccc;
+    background-color: @TileColorUnset;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    border-radius: 2px;
+}
+
+.centerXYDefinition {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sudokuGrid {
+    margin: 5vmin;
+    width: 90vmin;
+    height: 90vmin;
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+}
