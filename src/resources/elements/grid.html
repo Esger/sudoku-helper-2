@@ -1,13 +1,13 @@
 <template>
 
-    <require from="./cell"></require>
+	<require from="./cell"></require>
 
-    <div class="sudokuGrid">
-        <template repeat.for="row of grid">
-            <cell repeat.for="cell of row"
-                  row.bind="$parent.$index"
-                  col.bind="$index"></cell>
-        </template>
-    </div>
+	<div class="sudokuGrid">
+		<template repeat.for="row of grid">
+			<cell repeat.for="cell of row"
+				  row.bind="$parent.$index"
+				  col.bind="$index"></cell>
+		</template>
+	</div>
 
 </template>
