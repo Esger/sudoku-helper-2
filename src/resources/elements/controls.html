@@ -4,11 +4,11 @@
               value.bind="thinkingProgress"
               max="100"></progress> -->
 
-    <div click.delegate="showControls()"
-         mouseover.delegate="showControls()"
-         class="hamburger ${tucked ? '' : 'tucked'}">=</div>
+	<div mouseover.delegate="showControls()"
+		 click.delegate="showControls()"
+		 class="hamburger ${tucked ? '' : 'tucked'}">=</div>
 
-    <div class="controls ${tucked ? 'tucked' : ''}"
+	<div class="controls ${tucked ? 'tucked' : ''}">
          mousemove.delegate="cancelHide()">
 
         <label class="label" for="setup">

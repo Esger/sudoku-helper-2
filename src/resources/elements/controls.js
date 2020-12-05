@@ -10,15 +10,19 @@ export class ControlsCustomElement {
         this.setupMode = true;
         this.hideTimeoutHandle = undefined;
         this.thinkingProgress = 0;
-        this._addListeners();
     }
 
     attached() {
+		this._addListeners();
         this.toggleSetupMode();
     }
 
-    _addListeners() {
-        this._eventAggregator.subscribe('thinkingProgress', thinking => {
+	detached() {
+		this._thinkingProgressListener.dispose();
+	}
+
+	_addListeners() {
+		this._thinkingProgressListener = this._eventAggregator.subscribe('thinkingProgress', thinking => {
             if (this.thinkingProgress == 0) {
                 this.progressFactor = 0;
             }
@@ -27,22 +31,21 @@ export class ControlsCustomElement {
             }
             this.thinkingProgress = thinking.progress * this.progressFactor;
         });
-    }
+		$('body').on('click', event => {
+			if ($(event.target).closest('controls').length == 0) {
+				this._hideControls();
+			}
+		});
+	}
 
     showControls() {
         this.tucked = false;
-        this.hideControls();
     }
 
-    hideControls() {
+	_hideControls() {
         this.hideTimeoutHandle = setTimeout(_ => {
             this.tucked = true;
         }, 5000);
-    }
-
-    cancelHide() {
-        clearTimeout(this.hideTimeoutHandle);
-        this.hideControls();
     }
 
     resetGrid() {
