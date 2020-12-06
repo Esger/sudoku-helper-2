@@ -15,7 +15,9 @@
 	</template>
 
 	<template if.bind="value >= 0">
-		<p class="candidate valueSet">${value | theNumber & signal:'updateValue'}</p>
+		<div click.trigger="unsetValue()">
+			<p class="candidate valueSet">${value | theNumber & signal:'updateValue'}</p>
+		</div>
 	</template>
 
 </template>

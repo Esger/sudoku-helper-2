@@ -1,18 +1,20 @@
-.controls, .hamburger {
-    font: inherit;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0;
-    border-radius: 0 0 10px 10px;
-    background-color: rgba(255,255,255,0.4);
+controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     transition: all .5s ease-in-out;
-    z-index: 1000;
-    padding: 5px 15px;
 
     &.tucked {
-        top: -180px;
+        transform: translatey(-52px);
     }
+}
+
+.controls, .hamburger {
+    font: inherit;
+    border-radius: 0 0 10px 10px;
+    background-color: rgba(255,255,255,0.4);
+    z-index: 1000;
+    padding: 5px 15px;
 }
 
 .controls {
@@ -21,6 +23,7 @@
     flex-wrap: wrap;
     justify-content: center;
     padding: 10px;
+    width: max-content;
 }
 
 .thinkingProgress {
