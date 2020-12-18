@@ -36,6 +36,13 @@ export class CellCustomElement {
 			}
 		});
 
+		this._singleCandidatesSubscriber = this._eventAggregator.subscribe('setSingleCandidates', data => {
+			this.singleCandidates = data.singleCandidates;
+			if (this.singleCandidates) {
+				this._singleCandidateCheck();
+			}
+		});
+
 		this._sweepselfSubscriber = this._eventAggregator.subscribe('setCellValue', cell => {
 			if (cell.props.row == this.row && cell.props.col == this.col) {
 				this._setCellValue(cell.props.newValue);
@@ -73,12 +80,14 @@ export class CellCustomElement {
 				this._removeCandidate(data.value);
 			}
 		});
+
 	}
 
 	detached() {
 		this._resetListener.dispose();
 		this._toggleSetupModeSubscriber.dispose();
 		this._setAutosolveSubscriber.dispose();
+		this._singleCandidatesSubscriber.dispose();
 		this._sweepselfSubscriber.dispose();
 		this._cellValueSetSubscriber.dispose();
 		this._sweepRowSubscriber.dispose();
@@ -180,8 +189,16 @@ export class CellCustomElement {
 		let candidates = this.candidates.filter(candidate => {
 			return candidate >= 0;
 		});
-		if (candidates.length == 1) {
-			this._setCellValue(candidates[0]);
+		switch (candidates.length) {
+			case 0:
+				if (this.value < 0) this._eventAggregator.publish('statusChanged', 'error');
+				break;
+			case 1:
+				if (this.singleCandidates) this._setCellValue(candidates[0]);
+				break;
+
+			default:
+				break;
 		}
 	}
 

@@ -83,7 +83,7 @@ export class GridService {
 	}
 
 	_hasNoCandidates(cell) {
-		return cell && cell.candidates && !candidates.some(candidate => candidate >= 0);
+		return cell && cell.candidates && !cell.candidates.some(candidate => candidate >= 0);
 	}
 
 	_hasEqualValues(areaSet) {
@@ -113,24 +113,23 @@ export class GridService {
 		const flatRows = this._rows.flat();
 		const cellsSetCount = flatRows.flat().filter(cell => this._isSet(cell)).length;
 		let newStatus;
-		switch (cellsSetCount) {
-			case 0: newStatus = 'empty'; break;
-			case 1: newStatus = 'initial'; break;
-			case 81: if (this._allAreasCorrect()) {
-				newStatus = 'solved';
-			} else {
-				newStatus = 'error';
-			}
-				break;
-			// Moet dit niet flatRows.some(...) zijn?
-			default:
-				const someCellHasNoCandidates = this._rows.some(cell => this._hasNoCandidates(cell));
-				const someAreaHasEqualValues = Object.values(this._areaSets).some(areaSet => this._hasEqualValues(areaSet));
-				if (someCellHasNoCandidates || someAreaHasEqualValues) {
-					newStatus = 'error';
+		const someCellHasNoCandidates = flatRows.some(cell => this._hasNoCandidates(cell));
+		const someAreaHasEqualValues = Object.values(this._areaSets).some(areaSet => this._hasEqualValues(areaSet));
+		if (someCellHasNoCandidates || someAreaHasEqualValues) {
+			newStatus = 'error';
+		} else {
+			newStatus = 'initial';
+			switch (cellsSetCount) {
+				case 0: newStatus = 'empty'; break;
+				case 1: newStatus = 'initial'; break;
+				case 81: if (this._allAreasCorrect()) {
+					newStatus = 'solved';
 				} else {
-					newStatus = 'initial';
+					newStatus = 'error';
 				}
+					break;
+				default:
+			}
 		}
 		this.status = newStatus;
 		this._eventAggregator.publish('statusChanged', newStatus);

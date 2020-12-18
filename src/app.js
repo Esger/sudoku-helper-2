@@ -4,16 +4,15 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 
 @inject(GridService, EventAggregator)
 export class App {
-    constructor(gridService, eventAggregator) {
-        this._gridService = gridService;
-        this._eventAggregator = eventAggregator;
-        this._statusColor = 'empty';
-    }
-    attached() {
-        this._eventAggregator.subscribe('statusChanged', status => {
-            setTimeout(() => {
-                $('body').removeClass().addClass(status);
-            });
-        });
-    }
+	constructor(gridService, eventAggregator) {
+		this._gridService = gridService;
+		this._eventAggregator = eventAggregator;
+	}
+	attached() {
+		this._eventAggregator.subscribe('statusChanged', status => {
+			setTimeout(() => {
+				$('body').removeClass().addClass(status);
+			});
+		});
+	}
 }
