@@ -4,56 +4,60 @@ import { EventAggregator } from 'aurelia-event-aggregator';
 @inject(EventAggregator)
 export class ControlsCustomElement {
 
-    constructor(eventAggregator) {
-        this._eventAggregator = eventAggregator;
-        this.tucked = true;
-        this.setupMode = true;
-        this.hideTimeoutHandle = undefined;
-        this.thinkingProgress = 0;
-        this._addListeners();
-    }
+	constructor(eventAggregator) {
+		this._eventAggregator = eventAggregator;
+		this.tucked = true;
+		this.setupMode = true;
+		this.autosolve = false;
+		this.hideTimeoutHandle = undefined;
+		this.thinkingProgress = 0;
+	}
 
-    attached() {
-        this.toggleSetupMode();
-    }
+	attached() {
+		this._addListeners();
+		this.toggleSetupMode();
+	}
 
-    _addListeners() {
-        this._eventAggregator.subscribe('thinkingProgress', thinking => {
-            if (this.thinkingProgress == 0) {
-                this.progressFactor = 0;
-            }
-            if (this.progressFactor == 0 && thinking.progress > 1) {
-                this.progressFactor = 100 / thinking.progress;
-            }
-            this.thinkingProgress = thinking.progress * this.progressFactor;
-        });
-    }
+	detached() {
+		this._thinkingProgressListener.dispose();
+	}
 
-    showControls() {
-        this.tucked = false;
-        this.hideControls();
-    }
+	_addListeners() {
+		this._thinkingProgressListener = this._eventAggregator.subscribe('thinkingProgress', thinking => {
+			if (this.thinkingProgress == 0) {
+				this.progressFactor = 0;
+			}
+			if (this.progressFactor == 0 && thinking.progress > 1) {
+				this.progressFactor = 100 / thinking.progress;
+			}
+			this.thinkingProgress = thinking.progress * this.progressFactor;
+		});
+	}
 
-    hideControls() {
-        this.hideTimeoutHandle = setTimeout(_ => {
-            this.tucked = true;
-        }, 5000);
-    }
+	toggleControls() {
+		this.tucked = !this.tucked;
+	}
 
-    cancelHide() {
-        clearTimeout(this.hideTimeoutHandle);
-        this.hideControls();
-    }
+	resetGrid() {
+		this.autosolve = false;
+		this.setRemoveCandidates();
+		this._eventAggregator.publish('resetGrid');
+	}
 
-    resetGrid() {
-        this._eventAggregator.publish('resetGrid');
-    }
+	solveIt() {
+		this.autosolve = true;
+		this.setRemoveCandidates();
+		setTimeout(_ => {
+			this._eventAggregator.publish('solveIt');
+		});
+	}
 
-    solveIt() {
-        this._eventAggregator.publish('solveIt');
-    }
+	toggleSetupMode() {
+		this._eventAggregator.publish('toggleSetupMode', { setupMode: this.setupMode });
+	}
 
-    toggleSetupMode() {
-        this._eventAggregator.publish('toggleSetupMode', { setupMode: this.setupMode });
-    }
+	setRemoveCandidates() {
+		this._eventAggregator.publish('setAutosolve', { autosolve: this.autosolve });
+	}
+
 }

@@ -8,6 +8,7 @@ export class GridService {
 		this._eventAggregator = eventAggregator;
 		this._candidates = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 		this._tuples = [[], [], [], [], [], []];
+		this.candidatesRemoved = false;
 		this._fillTuples();
 		this.reset();
 	}
@@ -24,6 +25,11 @@ export class GridService {
 			'cols': this._cols,
 			'blocks': this._blocks
 		};
+		this.candidatesRemoved = false;
+	}
+
+	setCandidateRemoved(value) {
+		this.candidatesRemoved = value;
 	}
 
 	_newGrid() {
@@ -80,6 +86,17 @@ export class GridService {
 		return cell && cell.candidates && !candidates.some(candidate => candidate >= 0);
 	}
 
+	_hasEqualValues(areaSet) {
+		const hasEqualValues = areaSet.some(area => area.some((cell, i, area) => {
+			if (cell.props.value < 0) return false;
+			area.reverse();
+			const i2 = area.map(cell => cell.props.value).indexOf(cell.props.value);
+			area.reverse();
+			return i + i2 < area.length - 1;
+		}));
+		return hasEqualValues;
+	}
+
 	_areaIsCorrect(area) {
 		return area.reduce((accumulator, currentValue) =>
 			accumulator + currentValue.props.value, 0
@@ -93,8 +110,8 @@ export class GridService {
 	}
 
 	getStatus() {
-		let flatRows = this._rows.flat();
-		let cellsSetCount = flatRows.flat().filter(cell => this._isSet(cell)).length;
+		const flatRows = this._rows.flat();
+		const cellsSetCount = flatRows.flat().filter(cell => this._isSet(cell)).length;
 		let newStatus;
 		switch (cellsSetCount) {
 			case 0: newStatus = 'empty'; break;
@@ -106,11 +123,14 @@ export class GridService {
 			}
 				break;
 			// Moet dit niet flatRows.some(...) zijn?
-			default: if (this._rows.some(cell => this._hasNoCandidates(cell))) {
-				newStatus = 'error';
-			} else {
-				newStatus = 'initial';
-			}
+			default:
+				const someCellHasNoCandidates = this._rows.some(cell => this._hasNoCandidates(cell));
+				const someAreaHasEqualValues = Object.values(this._areaSets).some(areaSet => this._hasEqualValues(areaSet));
+				if (someCellHasNoCandidates || someAreaHasEqualValues) {
+					newStatus = 'error';
+				} else {
+					newStatus = 'initial';
+				}
 		}
 		this.status = newStatus;
 		this._eventAggregator.publish('statusChanged', newStatus);

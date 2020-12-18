@@ -15,7 +15,7 @@ export class GridCustomElement {
 		this._doChecks = 0;
 		this._processHandleId = undefined;
 		this.grid = this._candidates.map(row => this._candidates);
-		this.liveCheck = false;
+		this.autosolve = false;
 	}
 
 	attached() {
@@ -24,6 +24,9 @@ export class GridCustomElement {
 
 	detached() {
 		this._cellValueSetSubscriber.dispose();
+		this._solveSubscriber.dispose();
+		this._autosolveSubscriber.dispose();
+		this._resetSubscriber.dispose();
 		clearInterval(this._resetGridListener);
 	}
 
@@ -32,12 +35,19 @@ export class GridCustomElement {
 			this._addCheck();
 		});
 		this._solveSubscriber = this._eventAggregator.subscribe('solveIt', _ => {
+			this._addCheck();
 			this._processGrid();
+		});
+		this._autosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
+			this.autosolve = data.autosolve;
+		});
+		this._resetSubscriber = this._eventAggregator.subscribe('resetGrid', _ => {
+			this._gridService.setCandidateRemoved(false);
 		});
 	}
 
 	_addCheck() {
-		this._doChecks = 1 * this.liveCheck; // => 0 of 1
+		this._doChecks = 2 * this.autosolve; // => 0 of 1
 	}
 
 	_removeCheck() {

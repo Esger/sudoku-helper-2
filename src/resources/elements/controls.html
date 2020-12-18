@@ -1,31 +1,38 @@
-<template>
+<template class="${tucked ? 'tucked' : ''}">
 
-    <!-- <progress class="thinkingProgress"
+	<!-- <progress class="thinkingProgress"
               value.bind="thinkingProgress"
               max="100"></progress> -->
 
-    <div click.delegate="showControls()"
-         mouseover.delegate="showControls()"
-         class="hamburger ${tucked ? '' : 'tucked'}">=</div>
 
-    <div class="controls ${tucked ? 'tucked' : ''}"
-         mousemove.delegate="cancelHide()">
+	<div class="controls">
 
-        <label class="label" for="setup">
-             <input type="checkbox" 
-                    name="setup" 
-                    id="setup" 
-                    checked.bind="setupMode" 
-                    change.delegate="toggleSetupMode()">Setup</label>
+		<label class="label" for="setup">
+					  <input type="checkbox" 
+					  name="setup" 
+					  id="setup" 
+					  checked.bind="setupMode" 
+					  change.delegate="toggleSetupMode()">Setup</label>
 
-        <button class="button"
-                click.delegate="resetGrid()"
-                touchstart.delegate="resetGrid()">Reset</button>
+		<label class="label" for="autosolve">
+						  <input type="checkbox" 
+						  name="autosolve" 
+						  id="autosolve" 
+						  checked.bind="autosolve" 
+						  change.delegate="setRemoveCandidates()">Remove candidates</label>
 
-        <button class="button"
-                click.delegate="solveIt()"
-                touchstart.delegate="solveIt()">Solve</button>
+		<div>
+			<button class="button"
+							  click.delegate="resetGrid()"
+							  touchstart.delegate="resetGrid()">Reset</button>
 
-    </div>
+			<button class="button"
+							  click.delegate="solveIt()"
+							  touchstart.delegate="solveIt()">Solve</button>
+		</div>
+
+	</div>
+	<div click.delegate="toggleControls()"
+		 class="hamburger">${tucked ? '=' : '&times;'}</div>
 
 </template>

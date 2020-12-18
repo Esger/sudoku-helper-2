@@ -14,6 +14,7 @@ export class CellCustomElement {
 		this._eventAggregator = eventAggregator;
 		this._gridService = gridService;
 		this._setupMode = true;
+		this.autosolve = false;
 	}
 
 	attached() {
@@ -28,13 +29,20 @@ export class CellCustomElement {
 			this._setupMode = data.setupMode;
 		});
 
+		this._setAutosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
+			this.autosolve = data.autosolve;
+			if (this.autosolve) {
+				this._eventAggregator.publish('wipeAreas', this._getCell());
+			}
+		});
+
 		this._sweepselfSubscriber = this._eventAggregator.subscribe('setCellValue', cell => {
 			if (cell.props.row == this.row && cell.props.col == this.col) {
 				this._setCellValue(cell.props.newValue);
 			}
 		});
 
-		this._cellValueSetSubscriber = this._eventAggregator.subscribe('wipeRowColBlock', cell => {
+		this._cellValueSetSubscriber = this._eventAggregator.subscribe('wipeAreas', cell => {
 			if (cell.props.row == this.row ||
 				cell.props.col == this.col ||
 				this._inThisBlock(cell.props.row, cell.props.col)) {
@@ -70,6 +78,7 @@ export class CellCustomElement {
 	detached() {
 		this._resetListener.dispose();
 		this._toggleSetupModeSubscriber.dispose();
+		this._setAutosolveSubscriber.dispose();
 		this._sweepselfSubscriber.dispose();
 		this._cellValueSetSubscriber.dispose();
 		this._sweepRowSubscriber.dispose();
@@ -81,6 +90,7 @@ export class CellCustomElement {
 			this._setCellValue(value);
 		} else {
 			this._removeCandidate(value);
+			this._gridService.setCandidateRemoved(true);
 		}
 	}
 
@@ -88,7 +98,7 @@ export class CellCustomElement {
 		this.candidates = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 		this.value = -1;
 		this.props = {
-			value: this.value,
+			value: -1,
 			row: this.row,
 			col: this.col,
 			rowBlock: this._index2Block(this.row),
@@ -146,13 +156,23 @@ export class CellCustomElement {
 		}
 	}
 
+	unsetValue() {
+		if (!this.autosolve && !this._gridService.candidatesRemoved) {
+			this.value = -1;
+			this._reset();
+		}
+	}
+
 	_setCellValue(value) {
 		if (this.value < 0) {
 			this.value = value;
 			this.props.value = value;
 			this.candidates = this.candidates.map(_ => -1);
 			this._addCheck();
-			this._eventAggregator.publish('wipeRowColBlock', this._getCell());
+			if (this.autosolve) {
+				this._gridService.setCandidateRemoved(true);
+				this._eventAggregator.publish('wipeAreas', this._getCell());
+			}
 		}
 	}
 
