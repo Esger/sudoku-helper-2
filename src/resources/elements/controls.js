@@ -8,9 +8,10 @@ export class ControlsCustomElement {
 		this._eventAggregator = eventAggregator;
 		this.tucked = true;
 		this.setupMode = true;
-		this.autosolve = false;
+		this.removeCandidates = false;
 		this.hideTimeoutHandle = undefined;
 		this.thinkingProgress = 0;
+		this.singleCandidates = false;
 	}
 
 	attached() {
@@ -39,13 +40,15 @@ export class ControlsCustomElement {
 	}
 
 	resetGrid() {
-		this.autosolve = false;
+		this.removeCandidates = false;
+		this.singleCandidates = false;
 		this.setRemoveCandidates();
+		this.setSingleCandidates();
 		this._eventAggregator.publish('resetGrid');
 	}
 
 	solveIt() {
-		this.autosolve = true;
+		this.removeCandidates = true;
 		this.setRemoveCandidates();
 		setTimeout(_ => {
 			this._eventAggregator.publish('solveIt');
@@ -53,11 +56,15 @@ export class ControlsCustomElement {
 	}
 
 	toggleSetupMode() {
-		this._eventAggregator.publish('toggleSetupMode', { setupMode: this.setupMode });
+		this._eventAggregator.publish('toggleSetupMode', { 'setupMode': this.setupMode });
 	}
 
 	setRemoveCandidates() {
-		this._eventAggregator.publish('setAutosolve', { autosolve: this.autosolve });
+		this._eventAggregator.publish('setAutosolve', { 'autosolve': this.removeCandidates });
+	}
+
+	setSingleCandidates() {
+		this._eventAggregator.publish('setSingleCandidates', { 'singleCandidates': this.singleCandidates });
 	}
 
 }

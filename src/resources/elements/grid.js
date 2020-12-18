@@ -20,6 +20,7 @@ export class GridCustomElement {
 
 	attached() {
 		this._addListeners();
+		this._processGrid();
 	}
 
 	detached() {
@@ -36,7 +37,6 @@ export class GridCustomElement {
 		});
 		this._solveSubscriber = this._eventAggregator.subscribe('solveIt', _ => {
 			this._addCheck();
-			this._processGrid();
 		});
 		this._autosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
 			this.autosolve = data.autosolve;
@@ -125,8 +125,8 @@ export class GridCustomElement {
 				this._findTuples();
 				this._removeCheck();
 				this._eventAggregator.publish('thinkingProgress', { progress: this._doChecks });
-				this._gridService.getStatus();
 			}
+			this._gridService.getStatus();
 		}, 200);
 	}
 

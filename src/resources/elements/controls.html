@@ -13,15 +13,23 @@
 					  id="setup" 
 					  checked.bind="setupMode" 
 					  change.delegate="toggleSetupMode()">Setup</label>
+		<div class="controls__column">
+			<label class="label" for="removeCandidates">
+				<input type="checkbox" 
+				name="removeCandidates" 
+				id="removeCandidates" 
+				checked.bind="removeCandidates" 
+				change.delegate="setRemoveCandidates()">Remove candidates</label>
+			<label class="label" for="singleCandidates">
+				<input type="checkbox" 
+				name="singleCandidates" 
+				id="singleCandidates" 
+				checked.bind="singleCandidates" 
+				change.delegate="setSingleCandidates()">Fill single candidates</label>
 
-		<label class="label" for="autosolve">
-						  <input type="checkbox" 
-						  name="autosolve" 
-						  id="autosolve" 
-						  checked.bind="autosolve" 
-						  change.delegate="setRemoveCandidates()">Remove candidates</label>
+		</div>
 
-		<div>
+		<div class="controls__column">
 			<button class="button"
 							  click.delegate="resetGrid()"
 							  touchstart.delegate="resetGrid()">Reset</button>
