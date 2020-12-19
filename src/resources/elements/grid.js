@@ -55,7 +55,7 @@ export class GridCustomElement {
 	}
 
 	_arrayContainsArray(searchArray, findArray) {
-		let result = searchArray.some(element => {
+		const result = searchArray.some(element => {
 			return element.every((value, index) => {
 				return findArray[index] == value;
 			});
@@ -70,7 +70,7 @@ export class GridCustomElement {
 	}
 
 	_findUniques() {
-		let cells = this._gridService.findUniqueAreaCandidates();
+		const cells = this._gridService.findUniqueAreaCandidates();
 		this._signalCellValuesFound(cells);
 	}
 
