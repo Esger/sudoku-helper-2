@@ -29,6 +29,19 @@ export class CellCustomElement {
 			this._setupMode = data.setupMode;
 		});
 
+		this._loadValueSubscriber = this._eventAggregator.subscribe('loadCell', cell => {
+			if (cell.row == this.row && cell.col == this.col) {
+				this.value = cell.value;
+				this.props.value = cell.value;
+				if (this.value < 0) {
+					this.candidates = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+				} else {
+					this.candidates = this.candidates.map(_ => -1);
+				}
+
+			}
+		});
+
 		this._setAutosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
 			this.autosolve = data.autosolve;
 			if (this.autosolve) {

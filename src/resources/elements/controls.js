@@ -57,6 +57,14 @@ export class ControlsCustomElement {
 		});
 	}
 
+	saveIt() {
+		this._eventAggregator.publish('saveIt');
+	}
+
+	loadIt() {
+		this._eventAggregator.publish('loadIt');
+	}
+
 	toggleSetupMode() {
 		this._eventAggregator.publish('toggleSetupMode', { 'setupMode': this.setupMode });
 	}

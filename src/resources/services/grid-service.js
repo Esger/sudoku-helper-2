@@ -130,8 +130,10 @@ export class GridService {
 				default:
 			}
 		}
+		if (newStatus !== this.status) {
+			this._eventAggregator.publish('statusChanged', newStatus);
+		}
 		this.status = newStatus;
-		this._eventAggregator.publish('statusChanged', newStatus);
 	}
 
 	findUniqueCandidates(cells) {
@@ -190,6 +192,25 @@ export class GridService {
 		});
 
 		return tuples;
+	}
+
+	saveGrid() {
+		let values = this._rows.flat().map(cell => cell.props.value);
+		localStorage.setItem('sudoku-helper', JSON.stringify(values));
+	}
+
+	loadGrid() {
+		let values = JSON.parse(localStorage.getItem('sudoku-helper'));
+		const size = this._candidates.length;
+		values.forEach((value, i) => {
+			const col = i % size;
+			const row = Math.floor(i / size);
+			this._eventAggregator.publish('loadCell', {
+				col: col,
+				row: row,
+				value: value
+			});
+		});
 	}
 
 }

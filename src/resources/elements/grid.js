@@ -28,6 +28,8 @@ export class GridCustomElement {
 		this._solveSubscriber.dispose();
 		this._autosolveSubscriber.dispose();
 		this._resetSubscriber.dispose();
+		this._saveSubscriber.dispose();
+		this._loadSubscriber.dispose();
 		clearInterval(this._resetGridListener);
 	}
 
@@ -43,6 +45,12 @@ export class GridCustomElement {
 		});
 		this._resetSubscriber = this._eventAggregator.subscribe('resetGrid', _ => {
 			this._gridService.setCandidateRemoved(false);
+		});
+		this._saveSubscriber = this._eventAggregator.subscribe('saveIt', _ => {
+			this._saveGrid();
+		});
+		this._loadSubscriber = this._eventAggregator.subscribe('loadIt', _ => {
+			this._loadGrid();
 		});
 	}
 
@@ -127,6 +135,23 @@ export class GridCustomElement {
 				this._eventAggregator.publish('thinkingProgress', { progress: this._doChecks });
 			}
 			this._gridService.getStatus();
+		}, 200);
+	}
+
+	_stopProcessingGrid() {
+		clearInterval(this._processHandleId);
+	}
+
+	_saveGrid() {
+		this._gridService.saveGrid();
+	}
+
+	_loadGrid() {
+		this._stopProcessingGrid();
+		setTimeout(() => {
+			this._eventAggregator.publish('resetGrid');
+			this._gridService.loadGrid();
+			this._processGrid();
 		}, 200);
 	}
 
