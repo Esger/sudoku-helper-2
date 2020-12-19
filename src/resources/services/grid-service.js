@@ -62,12 +62,12 @@ export class GridService {
 
 	registerCell(cell) {
 		this._cellsReadyCount++;
-		let row = cell.props.row;
-		let col = cell.props.col;
-		let rowBlock = cell.props.rowBlock;
-		let colBlock = cell.props.colBlock;
-		let blockIndex = rowBlock * 3 + colBlock;
-		let blockCellIndex = (row % 3) * 3 + (col % 3);
+		const row = cell.props.row;
+		const col = cell.props.col;
+		const rowBlock = cell.props.rowBlock;
+		const colBlock = cell.props.colBlock;
+		const blockIndex = rowBlock * 3 + colBlock;
+		const blockCellIndex = (row % 3) * 3 + (col % 3);
 		this._blocks[blockIndex][blockCellIndex] = cell;
 		this._rows[row][col] = cell;
 		this._cols[col][row] = cell;
@@ -118,7 +118,6 @@ export class GridService {
 		if (someCellHasNoCandidates || someAreaHasEqualValues) {
 			newStatus = 'error';
 		} else {
-			newStatus = 'initial';
 			switch (cellsSetCount) {
 				case 0: newStatus = 'empty'; break;
 				case 1: newStatus = 'initial'; break;
@@ -173,7 +172,7 @@ export class GridService {
 	}
 
 	findTuples(areaType, nTuple) {
-		let cells = this._areaSets[areaType], tuples = [];
+		const cells = this._areaSets[areaType], tuples = [];
 
 		this._tuples[nTuple].forEach(tuple => {
 			cells.forEach(area => {

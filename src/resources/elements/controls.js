@@ -49,7 +49,9 @@ export class ControlsCustomElement {
 
 	solveIt() {
 		this.removeCandidates = true;
+		this.singleCandidates = true;
 		this.setRemoveCandidates();
+		this.setSingleCandidates();
 		setTimeout(_ => {
 			this._eventAggregator.publish('solveIt');
 		});
