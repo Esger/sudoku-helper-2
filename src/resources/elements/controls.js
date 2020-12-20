@@ -9,9 +9,11 @@ export class ControlsCustomElement {
 		this.tucked = true;
 		this.setupMode = true;
 		this.removeCandidates = false;
+		this.singleCandidates = false;
+		this.uniqueCandidates = false;
+		this.candidateNtuples = false;
 		this.hideTimeoutHandle = undefined;
 		this.thinkingProgress = 0;
-		this.singleCandidates = false;
 	}
 
 	attached() {
@@ -74,7 +76,21 @@ export class ControlsCustomElement {
 	}
 
 	setSingleCandidates() {
+		this.removeCandidates = true;
+		this.setRemoveCandidates();
 		this._eventAggregator.publish('setSingleCandidates', { 'singleCandidates': this.singleCandidates });
+	}
+
+	setUniqueCandidates() {
+		this.removeCandidates = true;
+		this.setRemoveCandidates();
+		this._eventAggregator.publish('setUniqueCandidates', { 'uniqueCandidates': this.uniqueCandidates });
+	}
+
+	setCandidateNtuples() {
+		this.removeCandidates = true;
+		this.setRemoveCandidates();
+		this._eventAggregator.publish('setCandidateNtuples', { 'candidateNtuples': this.candidateNtuples });
 	}
 
 }

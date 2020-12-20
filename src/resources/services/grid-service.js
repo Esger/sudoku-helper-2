@@ -173,19 +173,19 @@ export class GridService {
 		return cell.candidates.filter(candidate => candidate >= 0).length;
 	}
 
-	findTuples(areaType, nTuple) {
+	findTuples(areaType, tupleSize) {
 		const cells = this._areaSets[areaType], tuples = [];
 
-		this._tuples[nTuple].forEach(tuple => {
+		this._tuples[tupleSize].forEach(tuple => {
 			cells.forEach(area => {
 				let cellsSetsWithTuples = [];
 				area.forEach(cell => {
 					if (this._candidatesContainTuple(cell, tuple) &&
-						this._candidatesCount(cell) <= nTuple) {
+						this._candidatesCount(cell) <= tupleSize) {
 						cellsSetsWithTuples.push({ cell: cell, members: tuple });
 					}
 				});
-				if (cellsSetsWithTuples.length == nTuple) {
+				if (cellsSetsWithTuples.length == tupleSize) {
 					tuples.push(cellsSetsWithTuples);
 				}
 			});
