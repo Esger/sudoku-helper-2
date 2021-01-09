@@ -8,11 +8,12 @@
 	<div class="controls">
 
 		<label class="label" for="setup">
-					  <input type="checkbox" 
-					  name="setup" 
-					  id="setup" 
-					  checked.bind="setupMode" 
-					  change.delegate="toggleSetupMode()">Setup</label>
+			<input type="checkbox" 
+			name="setup" 
+			id="setup" 
+			checked.bind="setupMode" 
+			change.delegate="toggleSetupMode()">Setup</label>
+
 		<div class="controls__column">
 			<label class="label" for="removeCandidates">
 				<input type="checkbox" 
@@ -25,7 +26,19 @@
 				name="singleCandidates" 
 				id="singleCandidates" 
 				checked.bind="singleCandidates" 
-				change.delegate="setSingleCandidates()">Fill single candidates</label>
+				change.delegate="setSingleCandidates()">Find single candidates</label>
+			<label class="label" for="uniqueCandidates">
+				<input type="checkbox" 
+				name="uniqueCandidates" 
+				id="uniqueCandidates" 
+				checked.bind="uniqueCandidates" 
+				change.delegate="setUniqueCandidates()">Find unique candidates</label>
+			<label class="label" for="candidateNtuples">
+				<input type="checkbox" 
+				name="candidateNtuples" 
+				id="candidateNtuples" 
+				checked.bind="candidateNtuples" 
+				change.delegate="setCandidateNtuples()">Find candidate n-tuplets</label>
 
 		</div>
 

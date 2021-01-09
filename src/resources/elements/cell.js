@@ -38,7 +38,7 @@ export class CellCustomElement {
 				} else {
 					this.candidates = this.candidates.map(_ => -1);
 				}
-
+				this._registerCell();
 			}
 		});
 
@@ -50,8 +50,8 @@ export class CellCustomElement {
 		});
 
 		this._singleCandidatesSubscriber = this._eventAggregator.subscribe('setSingleCandidates', data => {
-			this.singleCandidates = data.singleCandidates;
-			if (this.singleCandidates) {
+			this.checkSingleCandidates = data.singleCandidates;
+			if (this.checkSingleCandidates) {
 				this._singleCandidateCheck();
 			}
 		});
@@ -170,8 +170,8 @@ export class CellCustomElement {
 
 	_removeCandidate(value) {
 		if (this.candidates[value] >= 0) {
+			// console.log('v ', value, ' r ', this.row, ' c ', this.col);
 			this.candidates[value] = -1;
-			this._eventAggregator.publish('candidateRemoved');
 			this._addCheck();
 			this._signalBindings();
 			this._singleCandidateCheck();
@@ -189,7 +189,7 @@ export class CellCustomElement {
 		if (this.value < 0) {
 			this.value = value;
 			this.props.value = value;
-			this.candidates = this.candidates.map(_ => -1);
+			this.candidates.forEach((c, i, candidates) => candidates[i] = -1);
 			this._addCheck();
 			if (this.autosolve) {
 				this._gridService.setCandidateRemoved(true);
@@ -199,15 +199,13 @@ export class CellCustomElement {
 	}
 
 	_singleCandidateCheck() {
-		let candidates = this.candidates.filter(candidate => {
-			return candidate >= 0;
-		});
+		let candidates = this.candidates.filter(candidate => candidate >= 0);
 		switch (candidates.length) {
 			case 0:
 				if (this.value < 0) this._eventAggregator.publish('statusChanged', 'error');
 				break;
 			case 1:
-				if (this.singleCandidates) this._setCellValue(candidates[0]);
+				if (this.checkSingleCandidates) this._setCellValue(candidates[0]);
 				break;
 
 			default:
