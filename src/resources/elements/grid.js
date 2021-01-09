@@ -136,6 +136,7 @@ export class GridCustomElement {
 
 	_processGrid() {
 		this._processHandleId = setInterval(() => {
+			console.log(this._doChecks);
 			if (this._doChecks > 0) {
 				if (this._setUniqueCandidates) {
 					this._findUniques();
