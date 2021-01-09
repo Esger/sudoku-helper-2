@@ -83,7 +83,7 @@ export class GridService {
 	}
 
 	_hasNoCandidates(cell) {
-		return cell && cell.candidates && !cell.candidates.some(candidate => candidate >= 0);
+		return cell && cell.props.value < 0 && cell.candidates && !cell.candidates.some(candidate => candidate >= 0);
 	}
 
 	_hasEqualValues(areaSet) {
@@ -164,24 +164,25 @@ export class GridService {
 		return cells;
 	}
 
-	_candidatesContainTuple(cell, tuple) {
-		return cell.props.value < 0 &&
-			cell.candidates.every(value => tuple.indexOf(value) >= 0 || value < 0);
-	}
-
-	_candidatesCount(cell) {
-		return cell.candidates.filter(candidate => candidate >= 0).length;
+	_allCandidatesInTuple(cell, tuple) {
+		const candidates = cell.candidates.filter(candidate => candidate >= 0);
+		const hasCandidates = candidates.length > 0;
+		if (!hasCandidates) {
+			return false;
+		}
+		const allCandidatesInTuple = candidates.every(candidate => tuple.indexOf(candidate) >= 0);
+		return allCandidatesInTuple;
 	}
 
 	findTuples(areaType, tupleSize) {
-		const cells = this._areaSets[areaType], tuples = [];
+		const cells = this._areaSets[areaType];
+		const tuples = [];
 
 		this._tuples[tupleSize].forEach(tuple => {
 			cells.forEach(area => {
 				let cellsSetsWithTuples = [];
 				area.forEach(cell => {
-					if (this._candidatesContainTuple(cell, tuple) &&
-						this._candidatesCount(cell) <= tupleSize) {
+					if (this._allCandidatesInTuple(cell, tuple)) {
 						cellsSetsWithTuples.push({ cell: cell, members: tuple });
 					}
 				});
@@ -190,7 +191,6 @@ export class GridService {
 				}
 			});
 		});
-
 		return tuples;
 	}
 
@@ -202,6 +202,7 @@ export class GridService {
 	loadGrid() {
 		let values = JSON.parse(localStorage.getItem('sudoku-helper'));
 		const size = this._candidates.length;
+		this._cellsReadyCount = 0;
 		values.forEach((value, i) => {
 			const col = i % size;
 			const row = Math.floor(i / size);

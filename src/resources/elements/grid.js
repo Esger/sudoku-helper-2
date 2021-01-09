@@ -17,7 +17,7 @@ export class GridCustomElement {
 		this.grid = this._candidates.map(row => this._candidates);
 		this.autosolve = false;
 		this._setUniqueCandidates = false;
-		this._candidateNtuples = false;
+		this._setCandidateNtuples = false;
 	}
 
 	attached() {
@@ -49,7 +49,7 @@ export class GridCustomElement {
 			this._addCheck();
 		});
 		this._setCandidatesNtuplesSubscriber = this._eventAggregator.subscribe('setCandidateNtuples', data => {
-			this._candidateNtuples = data.candidateNtuples;
+			this._setCandidateNtuples = data.candidateNtuples;
 			this._addCheck();
 		});
 		this._autosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
@@ -62,12 +62,15 @@ export class GridCustomElement {
 			this._saveGrid();
 		});
 		this._loadSubscriber = this._eventAggregator.subscribe('loadIt', _ => {
+			this._gridService.setCandidateRemoved(false);
 			this._loadGrid();
 		});
 	}
 
 	_addCheck() {
-		this._doChecks = 2 * this.autosolve; // => 0 of 1
+		setTimeout(() => {
+			this._doChecks = 1 * this.autosolve; // => 0 of 1
+		});
 	}
 
 	_removeCheck() {
@@ -97,6 +100,7 @@ export class GridCustomElement {
 	_findTuples() {
 		[2, 3, 4, 5].forEach(tupleSize => {
 			['rows', 'cols', 'blocks'].forEach(areaType => {
+				// console.log(areaType);
 				const tuples = this._gridService.findTuples(areaType, tupleSize);
 				tuples.forEach(area => {
 					let omitIndices;
@@ -115,6 +119,7 @@ export class GridCustomElement {
 							omit: omitIndices,
 							value: member
 						};
+						// console.log(areaType, ...tuple.members, data.cell.props.row, data.cell.props.col);
 						switch (areaType) {
 							case 'rows': this._eventAggregator.publish('sweepRow', data);
 								break;
@@ -123,7 +128,6 @@ export class GridCustomElement {
 							case 'blocks': this._eventAggregator.publish('sweepBlock', data);
 								break;
 						}
-
 					});
 				});
 			});
@@ -136,7 +140,7 @@ export class GridCustomElement {
 				if (this._setUniqueCandidates) {
 					this._findUniques();
 				}
-				if (this._setCandidatesNtuplesSubscriber) {
+				if (this._setCandidateNtuples) {
 					this._findTuples();
 				}
 				this._removeCheck();
