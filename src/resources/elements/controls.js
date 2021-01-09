@@ -12,6 +12,7 @@ export class ControlsCustomElement {
 		this.singleCandidates = false;
 		this.uniqueCandidates = false;
 		this.candidateNtuples = false;
+		this.excludedCandidates = false;
 		this.hideTimeoutHandle = undefined;
 		this.thinkingProgress = 0;
 	}
@@ -91,6 +92,12 @@ export class ControlsCustomElement {
 		this.removeCandidates = true;
 		this.setRemoveCandidates();
 		this._eventAggregator.publish('setCandidateNtuples', { 'candidateNtuples': this.candidateNtuples });
+	}
+
+	setExcludedCandidates() {
+		this.removeCandidates = true;
+		this.setRemoveCandidates();
+		this._eventAggregator.publish('setExcludedCandidates', { 'excludedCandidates': this.excludedCandidates });
 	}
 
 }

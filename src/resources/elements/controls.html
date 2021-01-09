@@ -39,6 +39,12 @@
 				id="candidateNtuples" 
 				checked.bind="candidateNtuples" 
 				change.delegate="setCandidateNtuples()">Find candidate n-tuplets</label>
+			<label class="label" for="excludedCandidates">
+				<input type="checkbox" 
+				name="excludedCandidates" 
+				id="excludedCandidates" 
+				checked.bind="excludedCandidates" 
+				change.delegate="setExcludedCandidates()">Find exluded candidates</label>
 
 		</div>
 
