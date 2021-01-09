@@ -50,8 +50,8 @@ export class GridService {
 					for (let k = j + 1; k < this._candidates.length; k++) {
 						const val4 = this._candidates[k];
 						this._tuples[4].push([val1, val2, val3, val4]);
-						for (let j = k + 1; j < this._candidates.length; j++) {
-							const val5 = this._candidates[j];
+						for (let l = k + 1; l < this._candidates.length; l++) {
+							const val5 = this._candidates[l];
 							this._tuples[5].push([val1, val2, val3, val4, val5]);
 						}
 					}
