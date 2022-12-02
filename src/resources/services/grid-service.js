@@ -194,6 +194,36 @@ export class GridService {
 		return tuples;
 	}
 
+	_someCandidatesInTuple(cell, tuple) {
+		const candidates = cell.candidates.filter(candidate => candidate >= 0);
+		const hasCandidates = candidates.length > 0;
+		if (!hasCandidates) {
+			return false;
+		}
+		const someCandidatesInTuple = candidates.some(candidate => tuple.indexOf(candidate) >= 0);
+		return someCandidatesInTuple;
+	}
+
+	findExcludeCandidates(areaType, tupleSize) {
+		const cells = this._areaSets[areaType];
+		const excludedCandidates = [];
+
+		this._tuples[tupleSize].forEach(tuple => {
+			cells.forEach(area => {
+				let cellsSetsWithTuples = [];
+				area.forEach(cell => {
+					if (this._someCandidatesInTuple(cell, tuple)) {
+						cellsSetsWithTuples.push({ cell: cell, members: tuple });
+					}
+				});
+				if (cellsSetsWithTuples.length == tupleSize) {
+					excludedCandidates.push(cellsSetsWithTuples);
+				}
+			});
+		});
+		return excludedCandidates;
+	}
+
 	saveGrid() {
 		let values = this._rows.flat().map(cell => cell.props.value);
 		localStorage.setItem('sudoku-helper', JSON.stringify(values));
