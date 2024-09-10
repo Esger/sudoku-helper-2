@@ -1,18 +1,10 @@
-<template class="${tucked ? 'tucked' : ''}">
+<template>
 
 	<!-- <progress class="thinkingProgress"
               value.bind="thinkingProgress"
               max="100"></progress> -->
 
-
 	<div class="controls">
-
-		<label class="label" for="setup">
-			<input type="checkbox" 
-			name="setup" 
-			id="setup" 
-			checked.bind="setupMode" 
-			change.delegate="toggleSetupMode()">Setup</label>
 
 		<div class="controls__column">
 			<label class="label" for="removeCandidates">
@@ -50,17 +42,21 @@
 
 		<div class="controls__column">
 			<button class="button"
-							  click.delegate="resetGrid()"
-							  touchstart.delegate="resetGrid()">Reset</button>
+				click.delegate="toggleSetupMode()"
+				touchstart.delegate="toggleSetupMode()">
+				${setupMode ? 'Play' : 'Setup'}</button>
 			<button class="button"
-							  click.delegate="solveIt()"
-							  touchstart.delegate="solveIt()">Solve</button>
+				click.delegate="resetGrid()"
+				touchstart.delegate="resetGrid()">Reset</button>
 			<button class="button"
-							  click.delegate="saveIt()"
-							  touchstart.delegate="saveIt()">Save</button>
+				click.delegate="solveIt()"
+				touchstart.delegate="solveIt()">Solve</button>
 			<button class="button"
-							  click.delegate="loadIt()"
-							  touchstart.delegate="loadIt()">Load</button>
+				click.delegate="saveIt()"
+				touchstart.delegate="saveIt()">Save</button>
+			<button class="button"
+				click.delegate="loadIt()"
+				touchstart.delegate="loadIt()">Load</button>
 		</div>
 
 	</div>

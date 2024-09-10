@@ -18,7 +18,7 @@ export class ControlsCustomElement {
 
 	attached() {
 		this._addListeners();
-		this.toggleSetupMode();
+		this._eventAggregator.publish('toggleSetupMode', this.setupMode);
 	}
 
 	detached() {
@@ -64,7 +64,8 @@ export class ControlsCustomElement {
 	}
 
 	toggleSetupMode() {
-		this._eventAggregator.publish('toggleSetupMode', { 'setupMode': this.setupMode });
+		this.setupMode = !this.setupMode;
+		this._eventAggregator.publish('toggleSetupMode', this.setupMode);
 	}
 
 	setRemoveCandidates() {

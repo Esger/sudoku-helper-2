@@ -6,8 +6,8 @@ import { GridService } from 'resources/services/grid-service';
 @inject(BindingSignaler, EventAggregator, GridService)
 export class CellCustomElement {
 
-	@bindable row
-	@bindable col
+	@bindable row;
+	@bindable col;
 
 	constructor(bindingSignaler, eventAggregator, gridService) {
 		this._bindingSignaler = bindingSignaler;
@@ -25,8 +25,8 @@ export class CellCustomElement {
 			this._reset();
 		});
 
-		this._toggleSetupModeSubscriber = this._eventAggregator.subscribe('toggleSetupMode', data => {
-			this._setupMode = data.setupMode;
+		this._toggleSetupModeSubscriber = this._eventAggregator.subscribe('toggleSetupMode', setupMode => {
+			this._setupMode = setupMode;
 		});
 
 		this._loadValueSubscriber = this._eventAggregator.subscribe('loadCell', cell => {
