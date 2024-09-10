@@ -6,7 +6,6 @@ export class ControlsCustomElement {
 
 	constructor(eventAggregator) {
 		this._eventAggregator = eventAggregator;
-		this.tucked = true;
 		this.setupMode = true;
 		this.removeCandidates = false;
 		this.singleCandidates = false;
@@ -36,10 +35,6 @@ export class ControlsCustomElement {
 			}
 			this.thinkingProgress = thinking.progress * this.progressFactor;
 		});
-	}
-
-	toggleControls() {
-		this.tucked = !this.tucked;
 	}
 
 	resetGrid() {
