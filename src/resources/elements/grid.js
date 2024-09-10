@@ -57,8 +57,8 @@ export class GridCustomElement {
 			this._setExcludedCandidates = data.excludedCandidates;
 			if (this._setExcludedCandidates) { this._addCheck(); }
 		});
-		this._autosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
-			this.autosolve = data.autosolve;
+		this._autosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', autosolve => {
+			this.autosolve = autosolve;
 		});
 		this._resetSubscriber = this._eventAggregator.subscribe('resetGrid', _ => {
 			this._gridService.setCandidateRemoved(false);

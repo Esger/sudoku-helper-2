@@ -12,13 +12,13 @@
 				name="removeCandidates" 
 				id="removeCandidates" 
 				checked.bind="removeCandidates" 
-				change.delegate="setRemoveCandidates()">Remove candidates</label>
+				change.delegate="setRemoveCandidates(removeCandidates)">Remove candidates</label>
 			<label class="label" for="singleCandidates">
 				<input type="checkbox" 
 				name="singleCandidates" 
 				id="singleCandidates" 
 				checked.bind="singleCandidates" 
-				change.delegate="setSingleCandidates()">Find single candidates</label>
+				change.delegate="setSingleCandidates(singleCandidates)">Find single candidates</label>
 			<label class="label" for="uniqueCandidates">
 				<input type="checkbox" 
 				name="uniqueCandidates" 
@@ -47,7 +47,7 @@
 				${setupMode ? 'Play' : 'Setup'}</button>
 			<button class="button"
 				click.delegate="resetGrid()"
-				touchstart.delegate="resetGrid()">Reset</button>
+				touchstart.delegate="resetGrid()">Clear</button>
 			<button class="button"
 				click.delegate="solveIt()"
 				touchstart.delegate="solveIt()">Solve</button>

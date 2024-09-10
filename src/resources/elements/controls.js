@@ -38,18 +38,14 @@ export class ControlsCustomElement {
 	}
 
 	resetGrid() {
-		this.removeCandidates = false;
-		this.singleCandidates = false;
-		this.setRemoveCandidates();
-		this.setSingleCandidates();
+		this.setRemoveCandidates(false);
+		this.setSingleCandidates(false);
 		this._eventAggregator.publish('resetGrid');
 	}
 
 	solveIt() {
-		this.removeCandidates = true;
-		this.singleCandidates = true;
-		this.setRemoveCandidates();
-		this.setSingleCandidates();
+		this.setRemoveCandidates(true);
+		this.setSingleCandidates(true);
 		setTimeout(_ => {
 			this._eventAggregator.publish('solveIt');
 		});
@@ -68,31 +64,29 @@ export class ControlsCustomElement {
 		this._eventAggregator.publish('toggleSetupMode', this.setupMode);
 	}
 
-	setRemoveCandidates() {
-		this._eventAggregator.publish('setAutosolve', { 'autosolve': this.removeCandidates });
+	setRemoveCandidates(value) {
+		this.removeCandidates = value;
+		this._eventAggregator.publish('setAutosolve', this.removeCandidates);
 	}
 
-	setSingleCandidates() {
-		this.removeCandidates = true;
-		this.setRemoveCandidates();
-		this._eventAggregator.publish('setSingleCandidates', { 'singleCandidates': this.singleCandidates });
+	setSingleCandidates(value) {
+		this.singleCandidates = value;
+		this.setRemoveCandidates(true);
+		this._eventAggregator.publish('setSingleCandidates', this.singleCandidates);
 	}
 
 	setUniqueCandidates() {
-		this.removeCandidates = true;
-		this.setRemoveCandidates();
+		this.setRemoveCandidates(true);
 		this._eventAggregator.publish('setUniqueCandidates', { 'uniqueCandidates': this.uniqueCandidates });
 	}
 
 	setCandidateNtuples() {
-		this.removeCandidates = true;
-		this.setRemoveCandidates();
+		this.setRemoveCandidates(true);
 		this._eventAggregator.publish('setCandidateNtuples', { 'candidateNtuples': this.candidateNtuples });
 	}
 
 	setExcludedCandidates() {
-		this.removeCandidates = true;
-		this.setRemoveCandidates();
+		this.setRemoveCandidates(true);
 		this._eventAggregator.publish('setExcludedCandidates', { 'excludedCandidates': this.excludedCandidates });
 	}
 

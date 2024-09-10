@@ -42,15 +42,15 @@ export class CellCustomElement {
 			}
 		});
 
-		this._setAutosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
-			this.autosolve = data.autosolve;
+		this._setAutosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', autosolve => {
+			this.autosolve = autosolve;
 			if (this.autosolve) {
 				this._eventAggregator.publish('wipeAreas', this._getCell());
 			}
 		});
 
-		this._singleCandidatesSubscriber = this._eventAggregator.subscribe('setSingleCandidates', data => {
-			this.checkSingleCandidates = data.singleCandidates;
+		this._singleCandidatesSubscriber = this._eventAggregator.subscribe('setSingleCandidates', singleCandidates => {
+			this.checkSingleCandidates = singleCandidates;
 			if (this.checkSingleCandidates) {
 				this._singleCandidateCheck();
 			}
