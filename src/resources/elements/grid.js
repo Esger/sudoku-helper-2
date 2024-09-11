@@ -65,7 +65,7 @@ export class GridCustomElement {
 	}
 
 	_addCheck() {
-		setTimeout(_ => this._doChecks = 1 * this.autosolve); // => 0 of 1);
+		setTimeout(_ => this._doChecks = 1 * this.autosolve); // => 0 of 1;
 	}
 
 	_removeCheck() {

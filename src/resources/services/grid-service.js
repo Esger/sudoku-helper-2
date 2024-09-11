@@ -141,14 +141,22 @@ export class GridService {
 		this._candidates.forEach(candidate => {
 			let theCell;
 			let candidateCount = 0;
+			let valueIsSet = false;
+			cells.forEach(cell => {
+				if (cell.props.value == candidate) {
+					valueIsSet = true;
+					return;
+				}
+			})
+			if (valueIsSet) return; // no need to search for this candidate
+
 			cells.forEach(cell => {
 				if (cell.candidates && cell.candidates.includes(candidate)) {
 					candidateCount++;
 					theCell = cell;
 				}
 			});
-			// hier ook !isset(theCell.props.value) => newValue weg?
-			if (theCell && !theCell.props.newValue && candidateCount == 1) {
+			if (!this._isSet(theCell) && candidateCount == 1) {
 				theCell.props.newValue = candidate;
 				theCells.push(theCell);
 			}
