@@ -39,33 +39,25 @@ export class GridCustomElement {
 	}
 
 	_addListeners() {
-		this._cellValueSetSubscriber = this._eventAggregator.subscribe('addCheck', _ => {
-			this._addCheck();
+		this._cellValueSetSubscriber = this._eventAggregator.subscribe('addCheck', _ => this._addCheck());
+		this._solveSubscriber = this._eventAggregator.subscribe('solveIt', _ => this._addCheck());
+		this._setUniqueCandidatesSubscriber = this._eventAggregator.subscribe('setUniqueCandidates', uniqueCandidates => {
+			this._setUniqueCandidates = uniqueCandidates;
+			if (this._setUniqueCandidates) this._addCheck();
 		});
-		this._solveSubscriber = this._eventAggregator.subscribe('solveIt', _ => {
-			this._addCheck();
+		this._setCandidatesNtuplesSubscriber = this._eventAggregator.subscribe('setCandidateNtuples', candidateNtuples => {
+			this._setCandidateNtuples = candidateNtuples;
+			if (this._setCandidateNtuples) this._addCheck();
 		});
-		this._setUniqueCandidatesSubscriber = this._eventAggregator.subscribe('setUniqueCandidates', data => {
-			this._setUniqueCandidates = data.uniqueCandidates;
-			if (this._setUniqueCandidates) { this._addCheck(); }
-		});
-		this._setCandidatesNtuplesSubscriber = this._eventAggregator.subscribe('setCandidateNtuples', data => {
-			this._setCandidateNtuples = data.candidateNtuples;
-			if (this._setCandidateNtuples) { this._addCheck(); }
-		});
-		this._setExcludedCandidatesSubscriber = this._eventAggregator.subscribe('setExcludedCandidates', data => {
-			this._setExcludedCandidates = data.excludedCandidates;
-			if (this._setExcludedCandidates) { this._addCheck(); }
+		this._setExcludedCandidatesSubscriber = this._eventAggregator.subscribe('setExcludedCandidates', excludedCandidates => {
+			this._setExcludedCandidates = excludedCandidates;
+			if (this._setExcludedCandidates) this._addCheck();
 		});
 		this._autosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', autosolve => {
 			this.autosolve = autosolve;
 		});
-		this._resetSubscriber = this._eventAggregator.subscribe('resetGrid', _ => {
-			this._gridService.setCandidateRemoved(false);
-		});
-		this._saveSubscriber = this._eventAggregator.subscribe('saveIt', _ => {
-			this._saveGrid();
-		});
+		this._resetSubscriber = this._eventAggregator.subscribe('resetGrid', _ => this._gridService.setCandidateRemoved(false));
+		this._saveSubscriber = this._eventAggregator.subscribe('saveIt', _ => this._saveGrid());
 		this._loadSubscriber = this._eventAggregator.subscribe('loadIt', _ => {
 			this._gridService.setCandidateRemoved(false);
 			this._loadGrid();
@@ -73,9 +65,7 @@ export class GridCustomElement {
 	}
 
 	_addCheck() {
-		setTimeout(() => {
-			this._doChecks = 1 * this.autosolve; // => 0 of 1
-		});
+		setTimeout(_ => this._doChecks = 1 * this.autosolve); // => 0 of 1);
 	}
 
 	_removeCheck() {
@@ -90,16 +80,12 @@ export class GridCustomElement {
 		});
 		return result;
 	}
-
-	_signalCellValuesFound(cells) {
+	
+	_findUniques() {
+		const cells = this._gridService.findUniqueAreaCandidates();
 		cells.forEach(cell => {
 			this._eventAggregator.publish('setCellValue', cell);
 		});
-	}
-
-	_findUniques() {
-		const cells = this._gridService.findUniqueAreaCandidates();
-		this._signalCellValuesFound(cells);
 	}
 
 	_findTuples() {

@@ -77,17 +77,17 @@ export class ControlsCustomElement {
 
 	setUniqueCandidates() {
 		this.setRemoveCandidates(true);
-		this._eventAggregator.publish('setUniqueCandidates', { 'uniqueCandidates': this.uniqueCandidates });
+		this._eventAggregator.publish('setUniqueCandidates', this.uniqueCandidates);
 	}
 
 	setCandidateNtuples() {
 		this.setRemoveCandidates(true);
-		this._eventAggregator.publish('setCandidateNtuples', { 'candidateNtuples': this.candidateNtuples });
+		this._eventAggregator.publish('setCandidateNtuples', this.candidateNtuples);
 	}
 
 	setExcludedCandidates() {
 		this.setRemoveCandidates(true);
-		this._eventAggregator.publish('setExcludedCandidates', { 'excludedCandidates': this.excludedCandidates });
+		this._eventAggregator.publish('setExcludedCandidates', this.excludedCandidates);
 	}
 
 }

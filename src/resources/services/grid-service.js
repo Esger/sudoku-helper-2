@@ -142,7 +142,7 @@ export class GridService {
 			let theCell;
 			let candidateCount = 0;
 			cells.forEach(cell => {
-				if (cell && cell.candidates && cell.candidates.indexOf(candidate) >= 0) {
+				if (cell.candidates && cell.candidates.includes(candidate)) {
 					candidateCount++;
 					theCell = cell;
 				}
