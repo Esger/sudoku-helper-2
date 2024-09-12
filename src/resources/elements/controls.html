@@ -24,19 +24,19 @@
 				name="uniqueCandidates" 
 				id="uniqueCandidates" 
 				checked.bind="uniqueCandidates" 
-				change.delegate="setUniqueCandidates()">Find unique candidates</label>
+				change.delegate="setUniqueCandidates(uniqueCandidates)">Find unique candidates</label>
 			<label class="label" for="candidateNtuples">
 				<input type="checkbox" 
 				name="candidateNtuples" 
 				id="candidateNtuples" 
 				checked.bind="candidateNtuples" 
-				change.delegate="setCandidateNtuples()">Find candidate n-tuplets</label>
+				change.delegate="setCandidateNtuples(candidateNtuples)">Find candidate n-tuplets</label>
 			<label class="label" for="excludedCandidates">
 				<input type="checkbox" 
 				name="excludedCandidates" 
 				id="excludedCandidates" 
 				checked.bind="excludedCandidates" 
-				change.delegate="setExcludedCandidates()">Find exluded candidates</label>
+				change.delegate="setExcludedCandidates(excludedCandidates)">Find exluded candidates</label>
 
 		</div>
 

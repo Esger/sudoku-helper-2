@@ -39,23 +39,22 @@ export class ControlsCustomElement {
 
 	resetGrid() {
 		this.setRemoveCandidates(false);
-		this.setSingleCandidates(false);
 		this._eventAggregator.publish('resetGrid');
 	}
 
 	solveIt() {
 		this.setRemoveCandidates(true);
-		this.setSingleCandidates(true);
 		setTimeout(_ => {
 			this._eventAggregator.publish('solveIt');
 		});
 	}
-
+	
 	saveIt() {
 		this._eventAggregator.publish('saveIt');
 	}
-
+	
 	loadIt() {
+		this.setRemoveCandidates(false);
 		this._eventAggregator.publish('loadIt');
 	}
 
@@ -65,29 +64,47 @@ export class ControlsCustomElement {
 	}
 
 	setRemoveCandidates(value) {
+		console.log(value);
 		this.removeCandidates = value;
-		this._eventAggregator.publish('setAutosolve', this.removeCandidates);
+		this._eventAggregator.publish('setAutosolve', value);
+		if (value) return;
+
+		this.setSingleCandidates(false);
+		this.setUniqueCandidates(false);
+		this.setCandidateNtuples(false);
+		this.setExcludedCandidates(false);
 	}
 
 	setSingleCandidates(value) {
 		this.singleCandidates = value;
+		this._eventAggregator.publish('setSingleCandidates', value);
+		if (!value) return;
+		
 		this.setRemoveCandidates(true);
-		this._eventAggregator.publish('setSingleCandidates', this.singleCandidates);
 	}
-
-	setUniqueCandidates() {
+	
+	setUniqueCandidates(value) {
+		this.uniqueCandidates = value;
+		this._eventAggregator.publish('setUniqueCandidates', value);
+		if (!value) return;
+		
 		this.setRemoveCandidates(true);
-		this._eventAggregator.publish('setUniqueCandidates', this.uniqueCandidates);
 	}
-
-	setCandidateNtuples() {
+	
+	setCandidateNtuples(value) {
+		this.candidateNtuples = value;
+		this._eventAggregator.publish('setCandidateNtuples', value);
+		if (!value) return;
+		
 		this.setRemoveCandidates(true);
-		this._eventAggregator.publish('setCandidateNtuples', this.candidateNtuples);
 	}
+	
+	setExcludedCandidates(value) {
+		this.excludedCandidates = value;
+		this._eventAggregator.publish('setExcludedCandidates', value);
+		if (!value) return;
 
-	setExcludedCandidates() {
 		this.setRemoveCandidates(true);
-		this._eventAggregator.publish('setExcludedCandidates', this.excludedCandidates);
 	}
 
 }
