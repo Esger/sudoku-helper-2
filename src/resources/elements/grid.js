@@ -131,34 +131,34 @@ export class GridCustomElement {
 				// console.log(areaType);
 				const tuples = this._gridService.findExcludeCandidates(areaType, tupleSize);
 				console.table(...tuples);
-				// tuples.forEach(area => {
-				// 	let omitIndices;
-				// 	switch (areaType) {
-				// 		case 'rows': omitIndices = area.map(tuple => tuple.cell.props.col);
-				// 			break;
-				// 		case 'cols': omitIndices = area.map(tuple => tuple.cell.props.row);
-				// 			break;
-				// 		case 'blocks': omitIndices = area.map(tuple => [tuple.cell.props.row, tuple.cell.props.col]);
-				// 			break;
-				// 	}
-				// 	let tuple = area[0];
-				// 	tuple.members.forEach(member => {
-				// 		let data = {
-				// 			cell: tuple.cell,
-				// 			omit: omitIndices,
-				// 			value: member
-				// 		};
-				// 		// console.log(areaType, ...tuple.members, data.cell.props.row, data.cell.props.col);
-				// 		switch (areaType) {
-				// 			case 'rows': this._eventAggregator.publish('sweepRow', data);
-				// 				break;
-				// 			case 'cols': this._eventAggregator.publish('sweepCol', data);
-				// 				break;
-				// 			case 'blocks': this._eventAggregator.publish('sweepBlock', data);
-				// 				break;
-				// 		}
-				// 	});
-				// });
+				tuples.forEach(area => {
+					let omitIndices;
+					switch (areaType) {
+						case 'rows': omitIndices = area.map(tuple => tuple.cell.props.col);
+							break;
+						case 'cols': omitIndices = area.map(tuple => tuple.cell.props.row);
+							break;
+						case 'blocks': omitIndices = area.map(tuple => [tuple.cell.props.row, tuple.cell.props.col]);
+							break;
+					}
+					let tuple = area[0];
+					tuple.members.forEach(member => {
+						let data = {
+							cell: tuple.cell,
+							omit: omitIndices,
+							value: member
+						};
+						// console.log(areaType, ...tuple.members, data.cell.props.row, data.cell.props.col);
+						switch (areaType) {
+							case 'rows': this._eventAggregator.publish('sweepRow', data);
+								break;
+							case 'cols': this._eventAggregator.publish('sweepCol', data);
+								break;
+							case 'blocks': this._eventAggregator.publish('sweepBlock', data);
+								break;
+						}
+					});
+				});
 			});
 		});
 	}
