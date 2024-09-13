@@ -46,6 +46,15 @@ controls {
     top: 1vmin;
 }
 
+.button {
+	min-width: 80px;
+	transition: all 0.3s ease;
+	&:focus {
+		transform: scale(0.92);
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+	}
+}
+
 .button, .label {
     font: inherit;
     padding: 4px 12px;

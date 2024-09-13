@@ -19,6 +19,10 @@ export class ControlsCustomElement {
 	attached() {
 		this._addListeners();
 		this._eventAggregator.publish('toggleSetupMode', this.setupMode);
+		// remove focus from buttons after click so tranition can repeat
+		$('.button').on('click touchend', function () {
+			$(this).one('transitionend', function () { $(this).trigger('blur') });
+		});
 	}
 
 	detached() {
@@ -48,11 +52,11 @@ export class ControlsCustomElement {
 			this._eventAggregator.publish('solveIt');
 		});
 	}
-	
+
 	saveIt() {
 		this._eventAggregator.publish('saveIt');
 	}
-	
+
 	loadIt() {
 		this.setRemoveCandidates(false);
 		this._eventAggregator.publish('loadIt');
@@ -79,26 +83,26 @@ export class ControlsCustomElement {
 		this.singleCandidates = value;
 		this._eventAggregator.publish('setSingleCandidates', value);
 		if (!value) return;
-		
+
 		this.setRemoveCandidates(true);
 	}
-	
+
 	setUniqueCandidates(value) {
 		this.uniqueCandidates = value;
 		this._eventAggregator.publish('setUniqueCandidates', value);
 		if (!value) return;
-		
+
 		this.setRemoveCandidates(true);
 	}
-	
+
 	setCandidateNtuples(value) {
 		this.candidateNtuples = value;
 		this._eventAggregator.publish('setCandidateNtuples', value);
 		if (!value) return;
-		
+
 		this.setRemoveCandidates(true);
 	}
-	
+
 	setExcludedCandidates(value) {
 		this.excludedCandidates = value;
 		this._eventAggregator.publish('setExcludedCandidates', value);
