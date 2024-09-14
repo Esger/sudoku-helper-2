@@ -141,14 +141,22 @@ export class GridService {
 		this._candidates.forEach(candidate => {
 			let theCell;
 			let candidateCount = 0;
+			let valueIsSet = false;
 			cells.forEach(cell => {
-				if (cell && cell.candidates && cell.candidates.indexOf(candidate) >= 0) {
+				if (cell.props.value == candidate) {
+					valueIsSet = true;
+					return;
+				}
+			})
+			if (valueIsSet) return; // no need to search for this candidate
+
+			cells.forEach(cell => {
+				if (cell.candidates && cell.candidates.includes(candidate)) {
 					candidateCount++;
 					theCell = cell;
 				}
 			});
-			// hier ook !isset(theCell.props.value) => newValue weg?
-			if (theCell && !theCell.props.newValue && candidateCount == 1) {
+			if (!this._isSet(theCell) && candidateCount == 1) {
 				theCell.props.newValue = candidate;
 				theCells.push(theCell);
 			}
@@ -192,6 +200,36 @@ export class GridService {
 			});
 		});
 		return tuples;
+	}
+
+	_someCandidatesInTuple(cell, tuple) {
+		const candidates = cell.candidates.filter(candidate => candidate >= 0);
+		const hasCandidates = candidates.length > 0;
+		if (!hasCandidates) {
+			return false;
+		}
+		const someCandidatesInTuple = candidates.some(candidate => tuple.indexOf(candidate) >= 0);
+		return someCandidatesInTuple;
+	}
+
+	findExcludeCandidates(areaType, tupleSize) {
+		const cells = this._areaSets[areaType];
+		const excludedCandidates = [];
+
+		this._tuples[tupleSize].forEach(tuple => {
+			cells.forEach(area => {
+				let cellsSetsWithTuples = [];
+				area.forEach(cell => {
+					if (this._someCandidatesInTuple(cell, tuple)) {
+						cellsSetsWithTuples.push({ cell: cell, members: tuple });
+					}
+				});
+				if (cellsSetsWithTuples.length == tupleSize) {
+					excludedCandidates.push(cellsSetsWithTuples);
+				}
+			});
+		});
+		return excludedCandidates;
 	}
 
 	saveGrid() {

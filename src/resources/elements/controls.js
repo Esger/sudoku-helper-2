@@ -6,19 +6,23 @@ export class ControlsCustomElement {
 
 	constructor(eventAggregator) {
 		this._eventAggregator = eventAggregator;
-		this.tucked = true;
 		this.setupMode = true;
 		this.removeCandidates = false;
 		this.singleCandidates = false;
 		this.uniqueCandidates = false;
 		this.candidateNtuples = false;
+		this.excludedCandidates = false;
 		this.hideTimeoutHandle = undefined;
 		this.thinkingProgress = 0;
 	}
 
 	attached() {
 		this._addListeners();
-		this.toggleSetupMode();
+		this._eventAggregator.publish('toggleSetupMode', this.setupMode);
+		// remove focus from buttons after click so tranition can repeat
+		$('.button').on('click touchend', function () {
+			$(this).one('transitionend', function () { $(this).trigger('blur') });
+		});
 	}
 
 	detached() {
@@ -37,23 +41,13 @@ export class ControlsCustomElement {
 		});
 	}
 
-	toggleControls() {
-		this.tucked = !this.tucked;
-	}
-
 	resetGrid() {
-		this.removeCandidates = false;
-		this.singleCandidates = false;
-		this.setRemoveCandidates();
-		this.setSingleCandidates();
+		this.setRemoveCandidates(false);
 		this._eventAggregator.publish('resetGrid');
 	}
 
 	solveIt() {
-		this.removeCandidates = true;
-		this.singleCandidates = true;
-		this.setRemoveCandidates();
-		this.setSingleCandidates();
+		this.setRemoveCandidates(true);
 		setTimeout(_ => {
 			this._eventAggregator.publish('solveIt');
 		});
@@ -64,33 +58,57 @@ export class ControlsCustomElement {
 	}
 
 	loadIt() {
+		this.setRemoveCandidates(false);
 		this._eventAggregator.publish('loadIt');
 	}
 
 	toggleSetupMode() {
-		this._eventAggregator.publish('toggleSetupMode', { 'setupMode': this.setupMode });
+		this.setupMode = !this.setupMode;
+		this._eventAggregator.publish('toggleSetupMode', this.setupMode);
 	}
 
-	setRemoveCandidates() {
-		this._eventAggregator.publish('setAutosolve', { 'autosolve': this.removeCandidates });
+	setRemoveCandidates(value) {
+		console.log(value);
+		this.removeCandidates = value;
+		this._eventAggregator.publish('setAutosolve', value);
+		if (value) return;
+
+		this.setSingleCandidates(false);
+		this.setUniqueCandidates(false);
+		this.setCandidateNtuples(false);
+		this.setExcludedCandidates(false);
 	}
 
-	setSingleCandidates() {
-		this.removeCandidates = true;
-		this.setRemoveCandidates();
-		this._eventAggregator.publish('setSingleCandidates', { 'singleCandidates': this.singleCandidates });
+	setSingleCandidates(value) {
+		this.singleCandidates = value;
+		this._eventAggregator.publish('setSingleCandidates', value);
+		if (!value) return;
+
+		this.setRemoveCandidates(true);
 	}
 
-	setUniqueCandidates() {
-		this.removeCandidates = true;
-		this.setRemoveCandidates();
-		this._eventAggregator.publish('setUniqueCandidates', { 'uniqueCandidates': this.uniqueCandidates });
+	setUniqueCandidates(value) {
+		this.uniqueCandidates = value;
+		this._eventAggregator.publish('setUniqueCandidates', value);
+		if (!value) return;
+
+		this.setRemoveCandidates(true);
 	}
 
-	setCandidateNtuples() {
-		this.removeCandidates = true;
-		this.setRemoveCandidates();
-		this._eventAggregator.publish('setCandidateNtuples', { 'candidateNtuples': this.candidateNtuples });
+	setCandidateNtuples(value) {
+		this.candidateNtuples = value;
+		this._eventAggregator.publish('setCandidateNtuples', value);
+		if (!value) return;
+
+		this.setRemoveCandidates(true);
+	}
+
+	setExcludedCandidates(value) {
+		this.excludedCandidates = value;
+		this._eventAggregator.publish('setExcludedCandidates', value);
+		if (!value) return;
+
+		this.setRemoveCandidates(true);
 	}
 
 }

@@ -30,6 +30,7 @@ export class GridCustomElement {
 		this._solveSubscriber.dispose();
 		this._setUniqueCandidatesSubscriber.dispose();
 		this._setCandidatesNtuplesSubscriber.dispose();
+		this._setExcludedCandidatesSubscriber.dispose();
 		this._autosolveSubscriber.dispose();
 		this._resetSubscriber.dispose();
 		this._saveSubscriber.dispose();
@@ -38,29 +39,25 @@ export class GridCustomElement {
 	}
 
 	_addListeners() {
-		this._cellValueSetSubscriber = this._eventAggregator.subscribe('addCheck', _ => {
-			this._addCheck();
+		this._cellValueSetSubscriber = this._eventAggregator.subscribe('addCheck', _ => this._addCheck());
+		this._solveSubscriber = this._eventAggregator.subscribe('solveIt', _ => this._addCheck());
+		this._setUniqueCandidatesSubscriber = this._eventAggregator.subscribe('setUniqueCandidates', uniqueCandidates => {
+			this._setUniqueCandidates = uniqueCandidates;
+			if (this._setUniqueCandidates) this._addCheck();
 		});
-		this._solveSubscriber = this._eventAggregator.subscribe('solveIt', _ => {
-			this._addCheck();
+		this._setCandidatesNtuplesSubscriber = this._eventAggregator.subscribe('setCandidateNtuples', candidateNtuples => {
+			this._setCandidateNtuples = candidateNtuples;
+			if (this._setCandidateNtuples) this._addCheck();
 		});
-		this._setUniqueCandidatesSubscriber = this._eventAggregator.subscribe('setUniqueCandidates', data => {
-			this._setUniqueCandidates = data.uniqueCandidates;
-			this._addCheck();
+		this._setExcludedCandidatesSubscriber = this._eventAggregator.subscribe('setExcludedCandidates', excludedCandidates => {
+			this._setExcludedCandidates = excludedCandidates;
+			if (this._setExcludedCandidates) this._addCheck();
 		});
-		this._setCandidatesNtuplesSubscriber = this._eventAggregator.subscribe('setCandidateNtuples', data => {
-			this._setCandidateNtuples = data.candidateNtuples;
-			this._addCheck();
+		this._autosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', autosolve => {
+			this.autosolve = autosolve;
 		});
-		this._autosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
-			this.autosolve = data.autosolve;
-		});
-		this._resetSubscriber = this._eventAggregator.subscribe('resetGrid', _ => {
-			this._gridService.setCandidateRemoved(false);
-		});
-		this._saveSubscriber = this._eventAggregator.subscribe('saveIt', _ => {
-			this._saveGrid();
-		});
+		this._resetSubscriber = this._eventAggregator.subscribe('resetGrid', _ => this._gridService.setCandidateRemoved(false));
+		this._saveSubscriber = this._eventAggregator.subscribe('saveIt', _ => this._saveGrid());
 		this._loadSubscriber = this._eventAggregator.subscribe('loadIt', _ => {
 			this._gridService.setCandidateRemoved(false);
 			this._loadGrid();
@@ -68,9 +65,7 @@ export class GridCustomElement {
 	}
 
 	_addCheck() {
-		setTimeout(() => {
-			this._doChecks = 1 * this.autosolve; // => 0 of 1
-		});
+		setTimeout(_ => this._doChecks = 1 * this.autosolve); // => 0 of 1;
 	}
 
 	_removeCheck() {
@@ -85,16 +80,12 @@ export class GridCustomElement {
 		});
 		return result;
 	}
-
-	_signalCellValuesFound(cells) {
+	
+	_findUniques() {
+		const cells = this._gridService.findUniqueAreaCandidates();
 		cells.forEach(cell => {
 			this._eventAggregator.publish('setCellValue', cell);
 		});
-	}
-
-	_findUniques() {
-		const cells = this._gridService.findUniqueAreaCandidates();
-		this._signalCellValuesFound(cells);
 	}
 
 	_findTuples() {
@@ -134,14 +125,56 @@ export class GridCustomElement {
 		});
 	}
 
+	_findExcludeCandidates() {
+		[2, 3, 4, 5].forEach(tupleSize => {
+			['rows', 'cols', 'blocks'].forEach(areaType => {
+				// console.log(areaType);
+				const tuples = this._gridService.findExcludeCandidates(areaType, tupleSize);
+				console.table(...tuples);
+				tuples.forEach(area => {
+					let omitIndices;
+					switch (areaType) {
+						case 'rows': omitIndices = area.map(tuple => tuple.cell.props.col);
+							break;
+						case 'cols': omitIndices = area.map(tuple => tuple.cell.props.row);
+							break;
+						case 'blocks': omitIndices = area.map(tuple => [tuple.cell.props.row, tuple.cell.props.col]);
+							break;
+					}
+					let tuple = area[0];
+					tuple.members.forEach(member => {
+						let data = {
+							cell: tuple.cell,
+							omit: omitIndices,
+							value: member
+						};
+						// console.log(areaType, ...tuple.members, data.cell.props.row, data.cell.props.col);
+						switch (areaType) {
+							case 'rows': this._eventAggregator.publish('sweepRow', data);
+								break;
+							case 'cols': this._eventAggregator.publish('sweepCol', data);
+								break;
+							case 'blocks': this._eventAggregator.publish('sweepBlock', data);
+								break;
+						}
+					});
+				});
+			});
+		});
+	}
+
 	_processGrid() {
 		this._processHandleId = setInterval(() => {
+			console.log(this._doChecks);
 			if (this._doChecks > 0) {
 				if (this._setUniqueCandidates) {
 					this._findUniques();
 				}
 				if (this._setCandidateNtuples) {
 					this._findTuples();
+				}
+				if (this._setExcludedCandidates) {
+					this._findExcludeCandidates();
 				}
 				this._removeCheck();
 				this._eventAggregator.publish('thinkingProgress', { progress: this._doChecks });

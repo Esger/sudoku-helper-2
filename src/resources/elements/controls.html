@@ -1,18 +1,10 @@
-<template class="${tucked ? 'tucked' : ''}">
+<template>
 
 	<!-- <progress class="thinkingProgress"
               value.bind="thinkingProgress"
               max="100"></progress> -->
 
-
 	<div class="controls">
-
-		<label class="label" for="setup">
-			<input type="checkbox" 
-			name="setup" 
-			id="setup" 
-			checked.bind="setupMode" 
-			change.delegate="toggleSetupMode()">Setup</label>
 
 		<div class="controls__column">
 			<label class="label" for="removeCandidates">
@@ -20,45 +12,53 @@
 				name="removeCandidates" 
 				id="removeCandidates" 
 				checked.bind="removeCandidates" 
-				change.delegate="setRemoveCandidates()">Remove candidates</label>
+				change.delegate="setRemoveCandidates(removeCandidates)">Remove candidates</label>
 			<label class="label" for="singleCandidates">
 				<input type="checkbox" 
 				name="singleCandidates" 
 				id="singleCandidates" 
 				checked.bind="singleCandidates" 
-				change.delegate="setSingleCandidates()">Find single candidates</label>
+				change.delegate="setSingleCandidates(singleCandidates)">Find single candidates</label>
 			<label class="label" for="uniqueCandidates">
 				<input type="checkbox" 
 				name="uniqueCandidates" 
 				id="uniqueCandidates" 
 				checked.bind="uniqueCandidates" 
-				change.delegate="setUniqueCandidates()">Find unique candidates</label>
+				change.delegate="setUniqueCandidates(uniqueCandidates)">Find unique candidates</label>
 			<label class="label" for="candidateNtuples">
 				<input type="checkbox" 
 				name="candidateNtuples" 
 				id="candidateNtuples" 
 				checked.bind="candidateNtuples" 
-				change.delegate="setCandidateNtuples()">Find candidate n-tuplets</label>
+				change.delegate="setCandidateNtuples(candidateNtuples)">Find candidate n-tuplets</label>
+			<label class="label" for="excludedCandidates">
+				<input type="checkbox" 
+				name="excludedCandidates" 
+				id="excludedCandidates" 
+				checked.bind="excludedCandidates" 
+				change.delegate="setExcludedCandidates(excludedCandidates)">Find exluded candidates</label>
 
 		</div>
 
 		<div class="controls__column">
+			<button class="button button--green"
+				click.delegate="toggleSetupMode()"
+				touchstart.delegate="toggleSetupMode()">
+				${setupMode ? 'Play' : 'Setup'}</button>
 			<button class="button"
-							  click.delegate="resetGrid()"
-							  touchstart.delegate="resetGrid()">Reset</button>
+				click.delegate="resetGrid()"
+				touchstart.delegate="resetGrid()">Clear</button>
 			<button class="button"
-							  click.delegate="solveIt()"
-							  touchstart.delegate="solveIt()">Solve</button>
+				click.delegate="solveIt()"
+				touchstart.delegate="solveIt()">Solve</button>
 			<button class="button"
-							  click.delegate="saveIt()"
-							  touchstart.delegate="saveIt()">Save</button>
+				click.delegate="saveIt()"
+				touchstart.delegate="saveIt()">Save</button>
 			<button class="button"
-							  click.delegate="loadIt()"
-							  touchstart.delegate="loadIt()">Load</button>
+				click.delegate="loadIt()"
+				touchstart.delegate="loadIt()">Load</button>
 		</div>
 
 	</div>
-	<div click.delegate="toggleControls()"
-		 class="hamburger">${tucked ? '=' : '&times;'}</div>
 
 </template>

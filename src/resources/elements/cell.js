@@ -6,8 +6,8 @@ import { GridService } from 'resources/services/grid-service';
 @inject(BindingSignaler, EventAggregator, GridService)
 export class CellCustomElement {
 
-	@bindable row
-	@bindable col
+	@bindable row;
+	@bindable col;
 
 	constructor(bindingSignaler, eventAggregator, gridService) {
 		this._bindingSignaler = bindingSignaler;
@@ -25,8 +25,8 @@ export class CellCustomElement {
 			this._reset();
 		});
 
-		this._toggleSetupModeSubscriber = this._eventAggregator.subscribe('toggleSetupMode', data => {
-			this._setupMode = data.setupMode;
+		this._toggleSetupModeSubscriber = this._eventAggregator.subscribe('toggleSetupMode', setupMode => {
+			this._setupMode = setupMode;
 		});
 
 		this._loadValueSubscriber = this._eventAggregator.subscribe('loadCell', cell => {
@@ -42,15 +42,15 @@ export class CellCustomElement {
 			}
 		});
 
-		this._setAutosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', data => {
-			this.autosolve = data.autosolve;
+		this._setAutosolveSubscriber = this._eventAggregator.subscribe('setAutosolve', autosolve => {
+			this.autosolve = autosolve;
 			if (this.autosolve) {
 				this._eventAggregator.publish('wipeAreas', this._getCell());
 			}
 		});
 
-		this._singleCandidatesSubscriber = this._eventAggregator.subscribe('setSingleCandidates', data => {
-			this.checkSingleCandidates = data.singleCandidates;
+		this._singleCandidatesSubscriber = this._eventAggregator.subscribe('setSingleCandidates', singleCandidates => {
+			this.checkSingleCandidates = singleCandidates;
 			if (this.checkSingleCandidates) {
 				this._singleCandidateCheck();
 			}
@@ -170,7 +170,7 @@ export class CellCustomElement {
 
 	_removeCandidate(value) {
 		if (this.candidates[value] >= 0) {
-			// console.log('v ', value, ' r ', this.row, ' c ', this.col);
+			console.log('v', value, ' r', this.row, ' c', this.col);
 			this.candidates[value] = -1;
 			this._addCheck();
 			this._signalBindings();
