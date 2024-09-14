@@ -170,7 +170,6 @@ export class CellCustomElement {
 
 	_removeCandidate(value) {
 		if (this.candidates[value] >= 0) {
-			console.log('v', value, ' r', this.row, ' c', this.col);
 			this.candidates[value] = -1;
 			this._addCheck();
 			this._signalBindings();

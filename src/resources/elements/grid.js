@@ -91,7 +91,6 @@ export class GridCustomElement {
 	_findTuples() {
 		[2, 3, 4, 5].forEach(tupleSize => {
 			['rows', 'cols', 'blocks'].forEach(areaType => {
-				// console.log(areaType);
 				const tuples = this._gridService.findTuples(areaType, tupleSize);
 				tuples.forEach(area => {
 					let omitIndices;
@@ -110,7 +109,6 @@ export class GridCustomElement {
 							omit: omitIndices,
 							value: member
 						};
-						// console.log(areaType, ...tuple.members, data.cell.props.row, data.cell.props.col);
 						switch (areaType) {
 							case 'rows': this._eventAggregator.publish('sweepRow', data);
 								break;
@@ -128,7 +126,6 @@ export class GridCustomElement {
 	_findExcludeCandidates() {
 		[2, 3, 4, 5].forEach(tupleSize => {
 			['rows', 'cols', 'blocks'].forEach(areaType => {
-				// console.log(areaType);
 				const tuples = this._gridService.findExcludeCandidates(areaType, tupleSize);
 				console.table(...tuples);
 				tuples.forEach(area => {
@@ -148,7 +145,6 @@ export class GridCustomElement {
 							omit: omitIndices,
 							value: member
 						};
-						// console.log(areaType, ...tuple.members, data.cell.props.row, data.cell.props.col);
 						switch (areaType) {
 							case 'rows': this._eventAggregator.publish('sweepRow', data);
 								break;
@@ -165,7 +161,6 @@ export class GridCustomElement {
 
 	_processGrid() {
 		this._processHandleId = setInterval(() => {
-			console.log(this._doChecks);
 			if (this._doChecks > 0) {
 				if (this._setUniqueCandidates) {
 					this._findUniques();

@@ -68,7 +68,6 @@ export class ControlsCustomElement {
 	}
 
 	setRemoveCandidates(value) {
-		console.log(value);
 		this.removeCandidates = value;
 		this._eventAggregator.publish('setAutosolve', value);
 		if (value) return;
